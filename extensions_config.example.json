@@ -98,6 +98,15 @@
       "session_init_timeout": 60,
       "tool_call_timeout": 150,
       "description": "NDIM scientific engine: plan, run, sweep and compare narrative-diffusion digital-twin experiments. Use with the ndim-engine skill. Needs the ndim-mcp server running on the host: see nidm-rwanda-dashboard/mcp_server/README.md"
+    },
+    "harness-dft": {
+      "enabled": false,
+      "type": "http",
+      "url": "http://host.docker.internal:8767/mcp",
+      "tool_name_prefix": false,
+      "session_init_timeout": 60,
+      "tool_call_timeout": 650,
+      "description": "harness-dft: resource-adaptive Quantum ESPRESSO DFT (relax, EOS, convergence, bands/DOS, phonons, NEB) on AiiDA + ASE, with CPU-batch-aware and GPU-aware resource routing plus remote HPC setup. Use with the dft-harness skill. Needs the harness-dft-mcp server running on the host (with a loaded AiiDA profile and `verdi daemon start`): see harness-dft/mcp_server/README.md"
     }
   },
   "skills": {}
