@@ -19,13 +19,19 @@ point at an actual CUDA-built QE code registered in AiiDA (check `hd_status().gp
 `hd_status().codes` for one whose label suggests it, e.g. `pw-7.5-gpu@localhost`) — `choose_resources` only
 recommends the resource shape, it never swaps which code a builder uses.
 
-**Status as of this skill's writing:** `pw-7.5-gpu@localhost` is built and registered (NVIDIA HPC SDK / CUDA
-Fortran, compute capability 8.9). Validated: a bulk-Si SCF through `hd_submit_scf` with `allow_gpu=True` correctly
-routed to `target="local-gpu"`/`mpiprocs=1` and matched the CPU energy to 9 significant figures. **Not
-validated**: `hd_submit_relax`/`hd_submit_bands`/`hd_submit_pdos`/the phonon chain on the GPU code (only `pw.x`
-was GPU-built), any structure other than that one small test case, multi-GPU, or any GPU architecture other than
-this one card's. Treat those as the first real validation, not a known-good path, and fall back to
-`allow_gpu=False` if something misbehaves. Full build/validation detail: `harness-dft/docs/gpu-build.md`.
+**Status as of this skill's writing:** every code this harness has workflow support for is GPU-built and
+registered (`pw-7.5-gpu`, `ph-7.5-gpu`, `dos-7.5-gpu`, `projwfc-7.5-gpu`, `q2r-7.5-gpu`, `matdyn-7.5-gpu`,
+`neb-7.5-gpu` — the last unused by any current workflow) via NVIDIA HPC SDK / CUDA Fortran, compute capability
+8.9. Validated on bulk Si through `hd_submit_scf`, the full phonon chain (`hd_submit_ph`→`hd_submit_q2r`→
+`hd_submit_matdyn`), and `hd_submit_pdos`, all with `allow_gpu=True` correctly routing to
+`target="local-gpu"`/`mpiprocs=1` and finishing successfully; the SCF energy matched the CPU result to 9
+significant figures. **Not validated**: `hd_submit_relax`/`hd_submit_bands` specifically on a GPU code (same code
+path as the validated ones, covered by a regression test, but not separately re-run), any structure other than
+that one small test case, multi-GPU, or any GPU architecture other than this one card's. Treat those as the first
+real validation, not a known-good path, and fall back to `allow_gpu=False` if something misbehaves. Full
+build/validation detail, including two real bugs this validation caught and fixed (GPU/batch-size parameters
+silently dropped on several submit tools; namespaced outputs like PdosWorkChain's `dos.*` silently dropped by
+`hd_get_job_results`): `harness-dft/docs/gpu-build.md`.
 
 ## Remote HPC, in detail
 
