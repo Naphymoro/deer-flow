@@ -19,10 +19,13 @@ point at an actual CUDA-built QE code registered in AiiDA (check `hd_status().gp
 `hd_status().codes` for one whose label suggests it, e.g. `pw-7.5-gpu@localhost`) — `choose_resources` only
 recommends the resource shape, it never swaps which code a builder uses.
 
-**Known gap as of this skill's writing:** the GPU-built QE code was still being built via NVIDIA's HPC SDK
-(`nvfortran`/CUDA Fortran) when this integration was put together, and had not yet been verified against a live
-GPU run. Treat the first real GPU submission as validation, not a known-good path — watch for exit codes related
-to CUDA-aware MPI or device visibility, and fall back to `allow_gpu=False` if it fails.
+**Status as of this skill's writing:** `pw-7.5-gpu@localhost` is built and registered (NVIDIA HPC SDK / CUDA
+Fortran, compute capability 8.9). Validated: a bulk-Si SCF through `hd_submit_scf` with `allow_gpu=True` correctly
+routed to `target="local-gpu"`/`mpiprocs=1` and matched the CPU energy to 9 significant figures. **Not
+validated**: `hd_submit_relax`/`hd_submit_bands`/`hd_submit_pdos`/the phonon chain on the GPU code (only `pw.x`
+was GPU-built), any structure other than that one small test case, multi-GPU, or any GPU architecture other than
+this one card's. Treat those as the first real validation, not a known-good path, and fall back to
+`allow_gpu=False` if something misbehaves. Full build/validation detail: `harness-dft/docs/gpu-build.md`.
 
 ## Remote HPC, in detail
 
