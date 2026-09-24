@@ -37,16 +37,33 @@ nothing about:
   stable candidate, especially for elements likely to be metallic in 2D form even if the bulk element isn't (or
   vice versa).
 
-## Known gaps (as of this skill's writing)
+## Known gaps (pilot results, 8 elements: Al/Ga/In/Tl honeycomb, P/As/Sb/Bi puckered)
 
-- Only bulk Si's phonon dispersion has been run through `hd_check_phonon_stability` — no 2D candidate has been
-  taken through the full relax→phonon→stability-check pipeline yet. Treat the first one as validation.
-- The puckered prototype has only been geometry-checked (correct bond lengths/coordination), not DFT-relaxed.
+All 8 relaxed successfully with vacuum intact. Only **1 of 8 (As) got a complete phonon-stability verdict** —
+found genuinely dynamically **unstable**, a real result. The other 7 are blocked, but by two external bugs, not
+by anything wrong in this harness:
+
+- **A real QE 7.5 `ph.x` crash** (Ga, Tl, In, Bi) at the point where it processes point-group symmetry operations
+  for `q=(0,0,0)` — correlates with symmetry-operation count, not with honeycomb vs. puckered topology, and
+  matches QE's own `pw.x` warning that `ibrav=0` (what AiiDA always builds) is "DISCOURAGED... with symmetry."
+  Not fixed by rank count, k-point pools, or `nosym=true` — all three tried and ruled out.
+- **A real `aiida-quantumespresso` restart-handler bug** (P, Sb): a `PhCalculation` restart after any
+  auto-handled failure raises `KeyError: 'INPUTPH'` in `ph.py`'s `prepare_for_submission` — the restart path
+  drops the INPUTPH namelist entirely. Both elements also genuinely exceed 2 hours of wall-clock time for just a
+  `(2,2,1)` q-mesh on this hardware, a separate real compute-cost finding.
+
+If you hit either of these when driving this skill: don't keep escalating walltime or retrying blindly — recognize
+the specific exit pattern (near-instant crash after "Computing dynamical matrix" → the QE bug; `KeyError:
+'INPUTPH'` in a process report after a handled restart → the aiida-quantumespresso bug) and tell the researcher
+it needs upstream investigation, not more resource tuning.
+
+Other real gaps:
 - No 2D electrostatics correction (QE's `assume_isolated='2D'` or ESM) is wired in — the "big vacuum supercell"
   approach used here is the standard method but is less accurate for polar/charged structures than a proper 2D
   Coulomb cutoff.
 - No formation-energy-vs-bulk or exfoliation-energy calculation exists — `hd_rank_prototypes` only compares
-  candidates against each other, not against a bulk reference.
+  candidates against each other, not against a bulk reference, and hasn't yet been used on a real comparison
+  (only mechanically sort-order-tested) since no element in the pilot has two complete prototype results.
 
-Full design detail and the resource-estimator bug this screening caught (`npool` divisibility):
-`harness-dft/docs/2d-screening.md`.
+Full design detail, the complete 8-element results table, and the resource-estimator/`force_metal` bugs this
+screening caught in the harness itself: `harness-dft/docs/2d-screening.md`.
