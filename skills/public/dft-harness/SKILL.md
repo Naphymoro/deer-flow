@@ -82,6 +82,7 @@ pseudopotentials for production numbers is a correctness bug, not a style choice
 | DOS / PDOS | `hd_submit_pdos` (needs an already-relaxed structure, pw+dos+projwfc codes) |
 | Phonon dispersion / dynamical stability | `hd_submit_ph` → `hd_submit_q2r` → `hd_submit_matdyn`, chained by pk |
 | Reaction/diffusion barrier | `hd_submit_neb` (ASE-native, no AiiDA provenance — mark results exploratory) |
+| Is there a stable 2D monolayer of element X? | `hd_generate_2d_prototype` → relax with `cell_dofree="2Dxy"` → phonon chain → `hd_check_phonon_stability`; see `references/2d-screening.md` |
 
 ## Reading results honestly
 
@@ -107,5 +108,6 @@ pseudopotentials for production numbers is a correctness bug, not a style choice
 
 - `references/gpu-and-remote.md`: full detail on GPU routing thresholds, remote computer setup, and known
   unverified paths (GPU-built QE code, live SSH clusters).
+- `references/2d-screening.md`: 2D monolayer stability screening workflow, what "stable" does/doesn't mean, known gaps.
 - `references/tool-reference.md`: every `hd_*` tool, arguments, returns.
 - `references/troubleshooting.md`: server not reachable, daemon not running, common AiiDA errors.

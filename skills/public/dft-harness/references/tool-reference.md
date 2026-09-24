@@ -18,6 +18,20 @@ machine/filesystem than your sandbox, so read the structure file yourself and pa
   Show this to the researcher before any `hd_submit_*` call.
 - **`hd_validate_pseudo_coverage(structure_text, structure_format, pseudo_family_label)`** →
   `{covered: bool, missing: [symbols], message?}`.
+- **`hd_generate_2d_prototype(element, prototype: "honeycomb"|"puckered", vacuum=18.0, buckle_seed=0.08, pucker_amplitude_fraction=0.35)`**
+  → `{structure_text, structure_format: "extxyz", n_atoms, cell_lengths_angstrom, kpoints_mesh_suggestion: [Nx,Ny,1], required_relax_settings: {cell_dofree: "2Dxy"}, note}`.
+  Generates a 2D monolayer *starting guess* (honeycomb: graphene/silicene/borophene family, 2 atoms; puckered:
+  black-phosphorus/phosphorene family, 4 atoms, 3-fold coordinated). Bond lengths come from tabulated covalent
+  radii, not literature values — always relax the result (`hd_submit_relax` with `cell_dofree="2Dxy"`, and the
+  suggested `(Nx,Ny,1)` mesh) before treating it as anything but a seed. See `references/2d-screening.md`.
+- **`hd_check_phonon_stability(matdyn_pk, tolerance_thz=-0.5)`** → `{stable, min_frequency_thz, tolerance_thz, n_qpoints, n_modes, imaginary_modes: [{qpoint, frequency_thz}]}`.
+  The standard dynamical-stability test on a finished `hd_submit_matdyn` job. Necessary, not sufficient, for
+  "this is a real material" — says nothing about formation energy vs. competing prototypes or finite-temperature
+  stability.
+- **`hd_rank_prototypes(candidates: [{label, pk}, ...])`** → `{ranked: [{label, pk, energy_ev, n_atoms, energy_per_atom_ev, delta_from_lowest_ev_per_atom}], ground_state_label}`.
+  Ranks finished relax/SCF jobs for the **same element** by energy per atom. Only meaningful if every candidate
+  used the same ecutwfc/k-point density/pseudo family — mixing those is the same correctness footgun as mixing
+  functionals (`dft-pseudo-select` skill).
 
 ## Job polling (read-only, generic across every hd_submit_* below)
 
@@ -32,8 +46,9 @@ machine/filesystem than your sandbox, so read the structure file yourself and pa
 
 ## Submit (write, needs researcher's local-vs-remote decision already made)
 
-- **`hd_submit_relax(structure_text, structure_format, code_label, pseudo_family_label, protocol, kpoints_mesh, ecutwfc_ry, allow_remote, allow_gpu, cpu_batch_size, local_atom_ceiling)`**
-  → `{pk, plan}`. `PwRelaxWorkChain`.
+- **`hd_submit_relax(structure_text, structure_format, code_label, pseudo_family_label, protocol, kpoints_mesh, ecutwfc_ry, allow_remote, allow_gpu, cpu_batch_size, local_atom_ceiling, cell_dofree=None)`**
+  → `{pk, plan}`. `PwRelaxWorkChain`. Set `cell_dofree="2Dxy"` for any 2D slab-with-vacuum structure (see
+  `hd_generate_2d_prototype`) — without it, vc-relax will collapse or tilt the vacuum.
 - **`hd_submit_scf(structure_text, structure_format, code_label, pseudo_family_label, protocol, kpoints_mesh, ecutwfc_ry, allow_remote, allow_gpu, cpu_batch_size, local_atom_ceiling)`**
   → `{pk, plan, cell_volume_ang3}`. `PwBaseWorkChain` single point. The building block for EOS (submit once per
   volume-scaled structure, compare `output_parameters.energy`) and convergence sweeps (submit once per
