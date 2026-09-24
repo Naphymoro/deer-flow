@@ -39,23 +39,30 @@ nothing about:
 
 ## Known gaps (pilot results, 8 elements: Al/Ga/In/Tl honeycomb, P/As/Sb/Bi puckered)
 
-All 8 relaxed successfully with vacuum intact. Only **1 of 8 (As) got a complete phonon-stability verdict** —
-found genuinely dynamically **unstable**, a real result. The other 7 are blocked, but by two external bugs, not
-by anything wrong in this harness:
+All 8 relaxed successfully with vacuum intact. **2 of 8 (As, Ga) got a complete phonon-stability verdict** —
+both found genuinely dynamically **unstable**, real results. The other 5 are blocked by one still-open external
+bug, not by anything wrong in this harness:
 
-- **A real QE 7.5 `ph.x` crash** (Ga, Tl, In, Bi) at the point where it processes point-group symmetry operations
-  for `q=(0,0,0)` — correlates with symmetry-operation count, not with honeycomb vs. puckered topology, and
-  matches QE's own `pw.x` warning that `ibrav=0` (what AiiDA always builds) is "DISCOURAGED... with symmetry."
-  Not fixed by rank count, k-point pools, or `nosym=true` — all three tried and ruled out.
-- **A real `aiida-quantumespresso` restart-handler bug** (P, Sb): a `PhCalculation` restart after any
+- **A real QE 7.5 `ph.x` crash was found, root-caused, and FIXED** (Ga, Tl, In, Bi originally hit it) — a missing
+  comma in a `WRITE` FORMAT string in `PHonon/PH/phq_summary.f90`, confirmed via a debug rebuild that produced a
+  precise compiler error, and fixed with a one-line patch, rebuilt, and verified against the exact previously-
+  crashing case (`JOB DONE`, correct frequencies). Registered as `ph-7.5-fixed@localhost` in this profile. An
+  earlier diagnosis (that `-northo 0`/disabling ScaLAPACK fixed it) was **wrong** — a false positive from a
+  not-fully-faithful manual reproduction — and has been corrected; don't reach for that workaround. Patch and
+  full writeup: `harness-dft/docs/upstream-bugs/`.
+- **A real, still-open `aiida-quantumespresso` restart-handler bug** (now blocks Tl, In, Bi, P, Sb — 5 of 8, once
+  the QE crash above stopped being the thing blocking them first): a `PhCalculation` restart after any
   auto-handled failure raises `KeyError: 'INPUTPH'` in `ph.py`'s `prepare_for_submission` — the restart path
-  drops the INPUTPH namelist entirely. Both elements also genuinely exceed 2 hours of wall-clock time for just a
-  `(2,2,1)` q-mesh on this hardware, a separate real compute-cost finding.
+  drops the INPUTPH namelist entirely. These elements also genuinely take longer than the default ~32-minute
+  walltime estimate for a `(2,2,1)` q-mesh on this hardware (confirmed up to 2 hours for P/Sb), which is what
+  triggers the restart in the first place — a real compute-cost finding, separate from the bug itself.
 
-If you hit either of these when driving this skill: don't keep escalating walltime or retrying blindly — recognize
-the specific exit pattern (near-instant crash after "Computing dynamical matrix" → the QE bug; `KeyError:
-'INPUTPH'` in a process report after a handled restart → the aiida-quantumespresso bug) and tell the researcher
-it needs upstream investigation, not more resource tuning.
+If you hit the `aiida-quantumespresso` pattern when driving this skill: don't keep escalating walltime or
+retrying blindly — a `KeyError: 'INPUTPH'` in a process report after a handled restart is this exact bug; tell
+the researcher it needs upstream investigation (or a calculation cheap enough to finish in one attempt), not more
+resource tuning. If you see the *other* pattern (near-instant crash right after "Computing dynamical matrix" with
+a `libgfortran`/`data_transfer_init` crash) on a `ph_code_label` other than `ph-7.5-fixed@localhost`, that's the
+now-fixed QE bug — point at the fixed code instead of debugging further.
 
 Other real gaps:
 - No 2D electrostatics correction (QE's `assume_isolated='2D'` or ESM) is wired in — the "big vacuum supercell"
