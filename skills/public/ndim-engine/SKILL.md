@@ -51,13 +51,31 @@ Details and rationale: `references/guardrails-and-approval.md`.
 
 | The researcher wants to know | Workflow | Tool |
 |---|---|---|
-| What signals are in this narrative? | `evidence` | `ndim_plan_experiment` (skill=`evidence`) |
-| What changes if we intervene at strength X? | `scenario` (baseline vs intervention) | `ndim_plan_experiment` (skill=`scenario`) |
+| What signals are in this narrative? (no change asked about) | `evidence` | `ndim_plan_experiment` (skill=`evidence`) |
+| How might an action, programme or condition change adoption? What if we intervene? | `scenario` (baseline vs intervention) | `ndim_plan_experiment` (skill=`scenario`) |
 | How does the endpoint respond across intervention strengths? | `sensitivity` (fixed 3/7/11-point grid) | `ndim_plan_experiment` (skill=`sensitivity`) |
 | How does the outcome respond to narrative influence, initial adoption, horizon, or strength together? | parameter sweep | `ndim_plan_sweep` then `ndim_run_sweep` |
 | Many interviews or documents, each analysed separately | one experiment per document | see `references/sweeps-and-parallel-work.md` |
 
 Set `skill` explicitly. `auto` guesses from keywords in the question, and "sensitivity" beats "scenario".
+
+**Default to `scenario` whenever the question is about change.** If the researcher asks how an action, programme or
+condition might *change, affect, increase, reduce, improve or influence* adoption, trust or uptake ("How might training
+more community health workers change adoption?", "Would a subsidy help?", "What if we ran a radio campaign?"), plan
+`scenario`, not `evidence`. A scenario runs the same evidence steps (encode, diagnose) *and* adds a matched baseline vs
+intervention comparison, so it answers the question with a before/after difference instead of only describing the notes.
+Use `evidence` only when the researcher asks what the notes contain (signals, themes, risks, trust) with no change in
+view. Use `sensitivity` when they ask "how much", "how strong", "at what level" or "is more effort worth it".
+
+When you plan a scenario, say plainly how the question maps onto the engine, because NDIM has one abstract lever:
+- The researcher's intervention (e.g. "more trained CHWs") is represented only by `intervention_strength` (0-1). The
+  engine does not model CHW counts, prices or channels. State this before asking for approval.
+- Pick a strength and say why (default 0.3 = moderate; use what the researcher suggests). Offer a `sensitivity` follow-up
+  if the right strength is unclear.
+- Keep `model` `compartmental` (or `hybrid`); `agent_based` blocks scenarios.
+
+After a scenario, lead the report with the baseline vs intervention difference in final adoption, then the evidence
+signals that drive it, then the caveats from `references/interpreting-results.md`.
 
 ## Standard workflow (single experiment)
 
