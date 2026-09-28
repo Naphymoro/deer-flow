@@ -15,7 +15,7 @@ Tool names are used as is (the DeerFlow config sets `tool_name_prefix: false`).
 | `ndim_list_runs` | `workspace_id`, `offset=0`, `limit=30` (1-100) | The engine's run listing and `total` |
 | `ndim_get_run` | `workspace_id`, `run_id`, `include_trajectories=false` | See "Run summary" |
 | `ndim_wait_for_run` | `workspace_id`, `run_id`, `timeout_seconds=60` (0-120) | Run summary once terminal, or current state at timeout |
-| `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief and a `notice`. Only for completed runs (409 otherwise) |
+| `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief, a `notice` and `reporting_rules`. Only for completed runs (409 otherwise) |
 | `ndim_compare_runs` | `workspace_id`, `run_ids` (2-24), `reference_run_id?` | `rows`, `excluded`, `comparability`, `markdown_table`, `notice` |
 
 ### Run summary (`ndim_get_run`, `ndim_wait_for_run`, start/resume/cancel)
@@ -39,8 +39,8 @@ now), `encoding` (scalar scores + themes; long text dropped), `inoculation_diagn
 | `workspace_id` | slug | required |
 | `question` | 8-1000 chars | required |
 | `evidence` | 20-20000 chars, English | required |
+| `skill` | `scenario` \| `sensitivity` \| `evidence` \| `auto` | required; choose it yourself (see SKILL.md, "Choose the workflow"), avoid `auto` |
 | `consent` | `synthetic` \| `research_use` \| `unconfirmed` | `unconfirmed` |
-| `skill` | `auto` \| `evidence` \| `scenario` \| `sensitivity` | `auto` (set it explicitly) |
 | `model` | `compartmental` \| `agent_based` \| `hybrid` | `compartmental` |
 | `profile` | `auto` \| `economy` \| `balanced` \| `thorough` | `auto` |
 | `horizon_days` | 7-365 | 90 |
