@@ -82,7 +82,8 @@ causes, contributes to or improves adoption, even with "may", and write no recom
 ## Standard workflow (single experiment)
 
 1. **Plan.** `ndim_plan_experiment(workspace_id, question, evidence, consent, skill, model, ...)`. Nothing runs yet.
-2. **Read the plan aloud to the researcher.** Steps, model family, parameters, `warnings`, and any `blockers`.
+2. **Read the plan aloud to the researcher.** Quote the plan's `question` exactly so they can confirm it is
+   theirs (pass their question verbatim; never rephrase it). Then steps, model family, parameters, `warnings`, and any `blockers`.
    Blockers (non-English evidence, `agent_based` with an intervention) must be resolved with a *new* plan.
 3. **Get explicit approval.** Ask directly. Wait for the answer.
 4. **Run.** `ndim_start_experiment(..., approval_statement="<their words>", wait_seconds=30)`.

@@ -40,7 +40,7 @@ to the last day, the maximum is just the endpoint, so there is no peak to report
 | Argument | Type / range | Default |
 |---|---|---|
 | `workspace_id` | slug | required |
-| `question` | 8-1000 chars | required |
+| `question` | 8-1000 chars | required; the researcher's words verbatim, never rephrased |
 | `evidence` | 20-20000 chars, English | required |
 | `skill` | `scenario` \| `sensitivity` \| `evidence` \| `auto` | required; choose it yourself (see SKILL.md, "Choose the workflow"), avoid `auto` |
 | `consent` | `synthetic` \| `research_use` \| `unconfirmed` | `unconfirmed` |
