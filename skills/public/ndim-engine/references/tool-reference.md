@@ -22,7 +22,9 @@ Tool names are used as is (the DeerFlow config sets `tool_name_prefix: false`).
 
 `run_id`, `status`, `question`, `workflow`, `progress` (`completed_steps`, `total_steps`, `pending`), `request`,
 `provenance` (`source_sha256`, `code_version`), `recent_events` (last 6), `review`, `warnings`, `notice`, `next` (what to do
-now), `encoding` (scalar scores + themes; long text dropped), `inoculation_diagnosis`, `simulations[]` (`step_id`,
+now), `encoding` (scalar scores + themes; long text dropped), `evidence_signals` (a ready-made sentence on the encoded
+trust, barrier and misinformation inputs; report it after the headline; a list is fine if
+every number and the caveat stay), `inoculation_diagnosis`, `simulations[]` (`step_id`,
 `intervention_strength`, `model`, `method_status`, `stats`), `model_parameters`, `comparison`, `numerical_checks`,
 `brief_available`. For a scenario, `comparison.baseline_vs_intervention` includes `headline`: a ready-made, non-causal
 sentence with both endpoints and the delta in percentage points. Quote it rather than rewording the numbers. `conclusion` is the matching closing sentence; quote it too.

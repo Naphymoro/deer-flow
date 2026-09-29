@@ -23,7 +23,7 @@ short version. Shorten it, do not drop it.
 - Warnings the engine attached
 
 ## 4. Results
-- Encoding: trust, barrier, sentiment, themes, labelled "keyword heuristic"
+- Encoding: `evidence_signals`, every number and its caveat kept (trust, barrier, misinformation risk, themes, labelled "keyword heuristic")
 - Diagnosis: flags, labelled "heuristic, requires review"
 - Simulation: `comparison.baseline_vs_intervention.headline` quoted as given, or the sweep table (from `markdown_table`)
 - Numerical checks: passed or not, with the sentence "numerical consistency only"
