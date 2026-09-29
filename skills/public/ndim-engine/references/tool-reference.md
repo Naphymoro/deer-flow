@@ -12,10 +12,10 @@ Tool names are used as is (the DeerFlow config sets `tool_name_prefix: false`).
 | `ndim_engine_status` | none | `reachable`, `deployment_mode`, `resources` (`cpu_available`, `memory_available_mb`, `recommended_profile`, `worker_limit`, `profiles`, `dependencies`), `planner`, `implemented`, `unavailable`, `access`. No filesystem paths. |
 | `ndim_list_workspaces` | none | `workspaces[]`: `workspace_id`, `name`, `description`, `domain`, `countries`, `updated_at` |
 | `ndim_list_lessons` | none | The engine's three teaching lessons and a **synthetic** sample field note (`sample`). Use `consent="synthetic"` with it. |
-| `ndim_list_runs` | `workspace_id`, `offset=0`, `limit=30` (1-100) | The engine's run listing and `total` |
+| `ndim_list_runs` | `workspace_id`, `offset=0`, `limit=30` (1-100) | The engine's run listing, `total`, and `next`. These are existing runs: a new question needs a new plan |
 | `ndim_get_run` | `workspace_id`, `run_id`, `include_trajectories=false` | See "Run summary" |
 | `ndim_wait_for_run` | `workspace_id`, `run_id`, `timeout_seconds=60` (0-120) | Run summary once terminal, or current state at timeout |
-| `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief, a `notice` and `reporting_rules`. Only for completed runs (409 otherwise) |
+| `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief, `question`, `created_at`, a `notice`, `reporting_rules` and `next` (the run's origin plus the same report instructions as `ndim_get_run`). Only for completed runs (409 otherwise) |
 | `ndim_compare_runs` | `workspace_id`, `run_ids` (2-24), `reference_run_id?` | `rows`, `excluded`, `comparability`, `markdown_table`, `notice`. Each row carries `shape`, `fastest_growth_day`, and `peak_day` (empty unless `peaks_before_end`) |
 
 ### Run summary (`ndim_get_run`, `ndim_wait_for_run`, start/resume/cancel)
@@ -81,7 +81,7 @@ Returns `run_id`, `status: planned`, `workflow`, `request`, `steps[]`, `sensitiv
 
 | Tool | Arguments | Notes |
 |---|---|---|
-| `ndim_start_experiment` | `workspace_id`, `run_id`, `approval_statement`, `wait_seconds=30` (0-120) | Only `planned` runs. Retries on 429. Returns run summary. |
+| `ndim_start_experiment` | `workspace_id`, `run_id`, `approval_statement`, `wait_seconds=30` (0-120) | Only `planned` runs; any other status is refused before the approval is logged, with what to do instead. Retries on 429. Returns run summary. |
 | `ndim_resume_experiment` | same | Only `failed`, `interrupted`, `cancelled`. 409 if code or environment changed. |
 | `ndim_run_sweep` | `workspace_id`, `run_ids` (2-24), `approval_statement`, `reference_run_id?`, `wait_seconds=60` | Starts all (4 at a time, queue-aware), waits, compares. Returns `comparison`, `errors`, `still_running`, `next`. One failure does not discard the rest. |
 

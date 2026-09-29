@@ -59,6 +59,10 @@ Details and rationale: `references/guardrails-and-approval.md`.
 
 Set `skill` explicitly. `auto` guesses from keywords in the question, and "sensitivity" beats "scenario".
 
+A new question needs a new plan. `ndim_list_runs` shows existing work, possibly by other researchers: if you report an
+existing run, say so and when it ran, and check its question, evidence and parameters match. Never start a run you did
+not plan and show in this conversation.
+
 **Default to `scenario` whenever the question is about change.** If the researcher asks how an action, programme or
 condition might *change, affect, increase, reduce, improve or influence* adoption, trust or uptake ("How might training
 more community health workers change adoption?", "Would a subsidy help?", "What if we ran a radio campaign?"), plan
