@@ -56,6 +56,7 @@ to the last day, the maximum is just the endpoint, so there is no peak to report
 | `expertise` | `guided` \| `researcher` \| `expert` | `guided` |
 | `source_name` | 1-240 chars | "Researcher-supplied field note" |
 | `prior_run_ids` | up to 3 reviewed, completed runs | none |
+| `strength_reason` | 8-400 chars, optional | Why this `intervention_strength`. Quote the researcher only if they gave a value or level; never attribute the default to them. Shown in `intervention_mapping` and kept in the audit log |
 
 Returns `run_id`, `status: planned`, `workflow`, `request`, `steps[]`, `sensitivity_grid`, `execution_profile`,
 `intervention_mapping` (scenario and sensitivity: how the intervention enters the engine, to state before approval;

@@ -71,8 +71,9 @@ When you plan a scenario, say plainly how the question maps onto the engine, bec
 - The researcher's intervention (e.g. "more trained CHWs") is represented only by `intervention_strength` (0-1). The
   engine does not model CHW counts, prices or channels. The plan result spells this out in `intervention_mapping`:
   state it before asking for approval.
-- Pick a strength and say why (default 0.3 = moderate; use what the researcher suggests). Offer a `sensitivity` follow-up
-  if the right strength is unclear.
+- Pick a strength and say why (default 0.3 = moderate; use what the researcher suggests); pass your reason as
+  `strength_reason`, and never say the researcher chose a value they did not give. The plan's `intervention_mapping`
+  ends with a sentence on the strength to relay as is. Offer a `sensitivity` follow-up if the right strength is unclear.
 - Keep `model` `compartmental` (or `hybrid`); `agent_based` blocks scenarios.
 
 After a scenario, lead the report with `comparison.baseline_vs_intervention.headline`, quoted as given, then the
