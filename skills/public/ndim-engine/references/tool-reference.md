@@ -16,7 +16,7 @@ Tool names are used as is (the DeerFlow config sets `tool_name_prefix: false`).
 | `ndim_get_run` | `workspace_id`, `run_id`, `include_trajectories=false` | See "Run summary" |
 | `ndim_wait_for_run` | `workspace_id`, `run_id`, `timeout_seconds=60` (0-120) | Run summary once terminal, or current state at timeout |
 | `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief, a `notice` and `reporting_rules`. Only for completed runs (409 otherwise) |
-| `ndim_compare_runs` | `workspace_id`, `run_ids` (2-24), `reference_run_id?` | `rows`, `excluded`, `comparability`, `markdown_table`, `notice` |
+| `ndim_compare_runs` | `workspace_id`, `run_ids` (2-24), `reference_run_id?` | `rows`, `excluded`, `comparability`, `markdown_table`, `notice`. Each row carries `shape`, `fastest_growth_day`, and `peak_day` (empty unless `peaks_before_end`) |
 
 ### Run summary (`ndim_get_run`, `ndim_wait_for_run`, start/resume/cancel)
 
@@ -26,8 +26,10 @@ now), `encoding` (scalar scores + themes; long text dropped), `inoculation_diagn
 `intervention_strength`, `model`, `method_status`, `stats`), `model_parameters`, `comparison`, `numerical_checks`,
 `brief_available`.
 
-`stats`: `points`, `initial_adoption`, `final_adoption`, `peak_adoption`, `peak_day`, `final_heuristic_band`,
-`final_compartments`. With `include_trajectories=true` each simulation also has the full daily `trajectory`
+`stats`: `points`, `initial_adoption`, `final_adoption`, `shape` (`rises_to_end`, `peaks_before_end` or `flat`),
+`fastest_growth_day` and `fastest_growth` (largest one-step rise, absent if adoption never rises), `final_heuristic_band`,
+`final_compartments`. `peak_adoption` and `peak_day` appear only when `shape` is `peaks_before_end`: when adoption rises
+to the last day, the maximum is just the endpoint, so there is no peak to report. With `include_trajectories=true` each simulation also has the full daily `trajectory`
 (about 90 rows x 16 fields). Avoid it unless you need it.
 
 ## Plan (writes a plan record only; nothing runs)

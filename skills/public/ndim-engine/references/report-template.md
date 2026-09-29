@@ -32,6 +32,7 @@ short version. Shorten it, do not drop it.
 ## 5. What this does and does not show
 - Plain-language reading, using the wording rules in interpreting-results.md
 - Saturation or ceiling effects if present
+- Timing: `fastest_growth_day`. Mention a peak only if `shape` is `peaks_before_end`; never call the last day a peak
 
 ## 6. Limitations (keep)
 - Keyword encoding of English text, one narrative per run
@@ -57,4 +58,5 @@ short version. Shorten it, do not drop it.
 - [ ] The approval quote is theirs, not yours
 - [ ] Consent status is what they told you
 - [ ] Comparability is stated for any multi-run comparison
+- [ ] No "peak" unless a simulation's `shape` is `peaks_before_end`
 - [ ] The report says the researcher's review is still pending

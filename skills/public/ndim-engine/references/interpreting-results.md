@@ -7,6 +7,8 @@
 | `trust_score`, `adoption_barrier_score`, `sentiment`, `themes` | A keyword-based reading of one English text | Measured trust or barriers in a population |
 | `misinformation_risk_score` and other diagnosis scores | A heuristic flag for review | Proof a narrative is false or harmful |
 | `final_adoption`, `peak_adoption` | An endpoint of an uncalibrated model | A forecast |
+| `shape` | `rises_to_end`, `peaks_before_end` or `flat`: the form of one model trajectory | A statement about real uptake |
+| `fastest_growth_day` | The model day with the largest rise in adoption | When uptake will accelerate in practice |
 | `final_heuristic_band` | A heuristic envelope | A confidence or credible interval |
 | `delta_final_adoption` (baseline vs intervention) | The difference between two model endpoints | An estimated treatment effect |
 | `sensitivity_curve` | Response of the endpoint to one parameter | Uncertainty, or evidence about the true response |
@@ -30,8 +32,9 @@ endpoints were already about 0.79-0.86 and intervention endpoints about 0.86-0.9
 - **Deltas shrink near the ceiling.** In that sample (intervention strength 0.3), raising `narrative_influence` from 0.2 to
   0.9 raised the baseline endpoint (about 0.79 to 0.86) while *lowering* the intervention delta (about 0.076 to 0.045). That
   is ceiling compression, not "narratives make interventions less useful."
-- **`peak_adoption` equals `final_adoption` and `peak_day` is the last day** when adoption never falls. Then the peak
-  tells you nothing. Say so instead of reporting a peak.
+- **There is usually no peak.** Adoption normally rises to the last day (`shape: rises_to_end`), so the summaries omit
+  `peak_adoption` and `peak_day`. Never describe the last day as a peak. For timing, report `fastest_growth_day`. Only
+  speak of a peak when `shape` is `peaks_before_end`.
 
 If `final_adoption` is above roughly 0.95 in both arms, or the trajectories converge, try a shorter `horizon_days` (for
 example 30 or 45) and compare timing, not just endpoints. Present it as a robustness check, not as a better answer.
