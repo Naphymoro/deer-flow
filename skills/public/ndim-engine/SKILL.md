@@ -1,6 +1,6 @@
 ---
 name: ndim-engine
-description: Use this skill to run, sweep, compare and report experiments on the NDIM (Narrative Inoculation Diffusion Model) scientific engine, a deterministic digital twin of how narratives spread and shape adoption of clean cooking and energy in Rwanda. Covers planning reviewable experiments from field notes or interview text, the researcher approval gate, scenario and sensitivity workflows, parameter sweeps, comparing runs, reading the engine's numerical checks, and writing honest reports. Triggers on NDIM, NIDM, narrative inoculation, digital twin, clean cooking adoption, CHW or field narrative simulation, intervention scenario, or sensitivity sweep. Requires the ndim-engine MCP server.
+description: Use this skill to run, sweep, compare and report experiments on the NDIM (Narrative Inoculation Diffusion Model) scientific engine, a deterministic digital twin of how narratives spread and shape adoption of clean cooking and energy in Rwanda. Covers planning reviewable experiments from field notes or interview text, the researcher approval gate, scenario and sensitivity workflows, parameter sweeps, comparing runs, reading the engine's numerical checks, and writing honest reports. Also guides the full 13-stage journey (capture, SDMX gate, repository, encoding, compartmental and agent models, digital twin, Bayesian update, RL, regional analysis, knowledge graph, inoculation lab, policy output) and the engine's tutorials. Triggers on NDIM, NIDM, narrative inoculation, digital twin, clean cooking adoption, CHW or field narrative simulation, intervention scenario, sensitivity sweep, NDIM journey or stages, or NDIM tutorial or lesson. Requires the ndim-engine MCP server.
 version: 0.1.0
 ---
 
@@ -56,12 +56,16 @@ Details and rationale: `references/guardrails-and-approval.md`.
 | How does the endpoint respond across intervention strengths? | `sensitivity` (fixed 3/7/11-point grid) | `ndim_plan_experiment` (skill=`sensitivity`) |
 | How does the outcome respond to narrative influence, initial adoption, horizon, or strength together? | parameter sweep | `ndim_plan_sweep` then `ndim_run_sweep` |
 | Many interviews or documents, each analysed separately | one experiment per document | see `references/sweeps-and-parallel-work.md` |
+| The whole path from their own field evidence to a policy draft: capture, analysis, digital twin, strategy, export | the 13-stage journey | `ndim_journey_guide`, then `references/journey.md` |
+| To learn how NDIM works | a tutorial (engine lesson) | `ndim_list_lessons` |
 
 Set `skill` explicitly. `auto` guesses from keywords in the question, and "sensitivity" beats "scenario".
 
-A new question needs a new plan. `ndim_list_runs` shows existing work, possibly by other researchers: if you report an
-existing run, say so and when it ran, and check its question, evidence and parameters match. Never start a run you did
-not plan and show in this conversation.
+A new question needs a new plan. `ndim_list_runs` shows existing work, possibly by other researchers. **Never present an
+existing run as an answer, and never show its results or brief.** When one matches the researcher's question, offer its
+`matching_tutorial` instead (name the lesson, say what it teaches, give its link; you can also run it here by planning
+with its `lesson_id` on the synthetic sample), then offer a new experiment on their own evidence. Never start a run you
+did not plan and show in this conversation.
 
 **Default to `scenario` whenever the question is about change.** If the researcher asks how an action, programme or
 condition might *change, affect, increase, reduce, improve or influence* adoption, trust or uptake ("How might training
@@ -141,5 +145,6 @@ including using DeerFlow subagents for many documents: `references/sweeps-and-pa
 - `references/interpreting-results.md`: reading outputs, saturation, allowed and forbidden claims, example wording
 - `references/sweeps-and-parallel-work.md`: parameter sweeps, comparability, subagent fan-out, sandbox analysis
 - `references/report-template.md`: the structure for the final write-up
+- `references/journey.md`: guiding the 13-stage journey, stage by stage, with what the researcher decides and how to report each stage
 - `references/troubleshooting.md`: errors, recovery, running and debugging the engine and MCP server
 - `scripts/evidence_preflight.py`: pre-flight check for evidence files

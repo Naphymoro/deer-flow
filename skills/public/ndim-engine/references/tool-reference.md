@@ -1,4 +1,4 @@
-# MCP tool reference (`ndim-engine` server, 14 tools)
+# MCP tool reference (`ndim-engine` server, 21 tools)
 
 Server source: `nidm-rwanda-dashboard/mcp_server/ndim_mcp/server.py`. If a tool list here differs from
 `tools/list`, the server wins; `backend/tests/test_ndim_engine_skill.py` fails when they drift.
@@ -11,11 +11,11 @@ Tool names are used as is (the DeerFlow config sets `tool_name_prefix: false`).
 |---|---|---|
 | `ndim_engine_status` | none | `reachable`, `deployment_mode`, `resources` (`cpu_available`, `memory_available_mb`, `recommended_profile`, `worker_limit`, `profiles`, `dependencies`), `planner`, `implemented`, `unavailable`, `access`. No filesystem paths. |
 | `ndim_list_workspaces` | none | `workspaces[]`: `workspace_id`, `name`, `description`, `domain`, `countries`, `updated_at` |
-| `ndim_list_lessons` | none | The engine's three teaching lessons and a **synthetic** sample field note (`sample`). Use `consent="synthetic"` with it. |
-| `ndim_list_runs` | `workspace_id`, `offset=0`, `limit=30` (1-100) | The engine's run listing, `total`, and `next`. These are existing runs: a new question needs a new plan |
+| `ndim_list_lessons` | none | The engine's three teaching lessons (tutorials), each with a `link` to it in the web app, and a **synthetic** sample field note (`sample`). Use `consent="synthetic"` with it. |
+| `ndim_list_runs` | `workspace_id`, `offset=0`, `limit=30` (1-100) | What has been run: rows of `title`, `skill`, `status`, `created_at`, `reviewed`, `lesson_id` (**no run ids**, on purpose), `total`, and `next`. Each row has `matching_tutorial` (`lesson_id`, `title`, `teaches`, `duration`, `link`) for its workflow. These are existing runs: never present one as an answer; offer its tutorial instead, and a new plan for the researcher's own question |
 | `ndim_get_run` | `workspace_id`, `run_id`, `include_trajectories=false` | See "Run summary" |
 | `ndim_wait_for_run` | `workspace_id`, `run_id`, `timeout_seconds=60` (0-120) | Run summary once terminal, or current state at timeout |
-| `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief, `question`, `created_at`, a `notice`, `reporting_rules` and `next` (the run's origin plus the same report instructions as `ndim_get_run`). Only for completed runs (409 otherwise) |
+| `ndim_get_brief` | `workspace_id`, `run_id` | `markdown` of the engine brief, `question`, `created_at`, `matching_tutorial`, a `notice`, `reporting_rules` and `next`. For a run not planned in this conversation, `next` says to offer the tutorial instead of the brief; for one planned here, it carries the same report instructions as `ndim_get_run`. Only for completed runs (409 otherwise) |
 | `ndim_compare_runs` | `workspace_id`, `run_ids` (2-24), `reference_run_id?` | `rows`, `excluded`, `comparability`, `markdown_table`, `notice`. Each row carries `shape`, `fastest_growth_day`, and `peak_day` (empty unless `peaks_before_end`) |
 
 ### Run summary (`ndim_get_run`, `ndim_wait_for_run`, start/resume/cancel)
@@ -31,7 +31,7 @@ sentence with both endpoints and the delta in percentage points. Quote it rather
 
 `stats`: `points`, `initial_adoption`, `final_adoption`, `shape` (`rises_to_end`, `peaks_before_end` or `flat`),
 `fastest_growth_day` and `fastest_growth` (largest one-step rise, absent if adoption never rises), `final_heuristic_band`,
-`final_compartments`. `peak_adoption` and `peak_day` appear only when `shape` is `peaks_before_end`: when adoption rises
+`final_compartments` with `compartment_names` (S susceptible, M misinformed, T truth-aligned, I inoculated, R durable adoption belief; use these names, never others). `peak_adoption` and `peak_day` appear only when `shape` is `peaks_before_end`: when adoption rises
 to the last day, the maximum is just the endpoint, so there is no peak to report. With `include_trajectories=true` each simulation also has the full daily `trajectory`
 (about 90 rows x 16 fields). Avoid it unless you need it.
 
@@ -57,6 +57,7 @@ to the last day, the maximum is just the endpoint, so there is no peak to report
 | `source_name` | 1-240 chars | "Researcher-supplied field note" |
 | `prior_run_ids` | up to 3 reviewed, completed runs | none |
 | `strength_reason` | 8-400 chars, optional | Why this `intervention_strength`. Quote the researcher only if they gave a value or level; never attribute the default to them. Shown in `intervention_mapping` and kept in the audit log |
+| `lesson_id` | `evidence` \| `scenario` \| `sensitivity`, optional | Only to run a tutorial here: `skill` must match the lesson, evidence is the synthetic `sample`. The run counts as that lesson in the web app, where the researcher answers its check |
 
 Returns `run_id`, `status: planned`, `workflow`, `request`, `steps[]`, `sensitivity_grid`, `execution_profile`,
 `intervention_mapping` (scenario and sensitivity: how the intervention enters the engine, to state before approval;
@@ -90,6 +91,29 @@ Returns `run_id`, `status: planned`, `workflow`, `request`, `steps[]`, `sensitiv
 | Tool | Arguments | Notes |
 |---|---|---|
 | `ndim_cancel_experiment` | `workspace_id`, `run_id` | Logged. Planned runs cancel immediately; running ones stop at the next tool boundary. |
+
+## The 13-stage journey
+
+Full walkthrough and wording: `references/journey.md`. Every journey tool returns the same view: `journey_id`,
+`question`, `next_stage`, `progress` (one line per stage with its status), `records` (each with `gate`, `gate_flags`,
+`decision`) and `next`. After a stage runs it also has `stage`, `result` (compact: curve `stats`, never full
+trajectories), `limits` (what the numbers are not) and, when a re-run cleared later stages, `cleared_later_stages`.
+
+| Tool | Arguments | Notes |
+|---|---|---|
+| `ndim_journey_guide` | none | The 13 stages (`does`, `needs`, `researcher_decision`, `optional`, `limits`), `principles`, `web_app` link. Read-only |
+| `ndim_journey_list` | `workspace_id` | Existing journeys. Continue one only if the researcher confirms it is theirs. Read-only |
+| `ndim_journey_start` | `workspace_id`, `question` (verbatim), `country="Rwanda"` | Creates the journey; nothing is scored |
+| `ndim_journey_status` | `workspace_id`, `journey_id` | Where it stands. Read-only |
+| `ndim_journey_add_evidence` | `workspace_id`, `journey_id`, `records[]` (1-50: `text`, `admin_unit`, `source_name`, `period`, `source_type`, `language`, `consent`) | Stages 1-2: stores each record unchanged and gate-checks it (`eligible`, `review_before_accepting`, `blocked`). Frozen once encoding runs |
+| `ndim_journey_record_decisions` | `workspace_id`, `journey_id`, `decisions[]` (`record_id`, `decision` accept\|reject, `reason?`), `approval_statement` | Stage 3: the researcher's decisions in their words. A blocked record cannot be accepted. Audited after the engine accepts |
+| `ndim_journey_run_stage` | `workspace_id`, `journey_id`, `stage`, stage settings below, `approval_statement` (digital, policy) | Stages 4-13, in order (409 names the missing stages). Audited after the engine accepts |
+
+`ndim_journey_run_stage` settings: `horizon_days=180` (compartmental, agents, digital); `peer_effect=0.08`,
+`media_effect=0.05` (agents); `observed_adoption`, `trust_shift`, `barrier_shift` (digital, required, no defaults),
+`observed_series` (digital, optional, 3+ observed values), `feedback_note`; `priors` (bayes: `trust_a`, `trust_b`,
+`barrier_a`, `barrier_b`); `regional_mode` (`isolated`\|`grouped`), `regional_target` (`barrier`\|`trust`\|`diffusion`);
+`audience`, `tone`, `apply_to_twin=false` (inoculation).
 
 ## Deliberately absent
 
