@@ -69,13 +69,15 @@ view. Use `sensitivity` when they ask "how much", "how strong", "at what level" 
 
 When you plan a scenario, say plainly how the question maps onto the engine, because NDIM has one abstract lever:
 - The researcher's intervention (e.g. "more trained CHWs") is represented only by `intervention_strength` (0-1). The
-  engine does not model CHW counts, prices or channels. State this before asking for approval.
+  engine does not model CHW counts, prices or channels. The plan result spells this out in `intervention_mapping`:
+  state it before asking for approval.
 - Pick a strength and say why (default 0.3 = moderate; use what the researcher suggests). Offer a `sensitivity` follow-up
   if the right strength is unclear.
 - Keep `model` `compartmental` (or `hybrid`); `agent_based` blocks scenarios.
 
-After a scenario, lead the report with the baseline vs intervention difference in final adoption, then the evidence
-signals that drive it, then the caveats from `references/interpreting-results.md`.
+After a scenario, lead the report with `comparison.baseline_vs_intervention.headline`, quoted as given, then the
+evidence signals that drive it, then the caveats from `references/interpreting-results.md`, and close with its `conclusion`, quoted. Never say the intervention
+causes, contributes to or improves adoption, even with "may", and write no recommendations: offer further analyses.
 
 ## Standard workflow (single experiment)
 

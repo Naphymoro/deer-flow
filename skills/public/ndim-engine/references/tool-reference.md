@@ -24,7 +24,8 @@ Tool names are used as is (the DeerFlow config sets `tool_name_prefix: false`).
 `provenance` (`source_sha256`, `code_version`), `recent_events` (last 6), `review`, `warnings`, `notice`, `next` (what to do
 now), `encoding` (scalar scores + themes; long text dropped), `inoculation_diagnosis`, `simulations[]` (`step_id`,
 `intervention_strength`, `model`, `method_status`, `stats`), `model_parameters`, `comparison`, `numerical_checks`,
-`brief_available`.
+`brief_available`. For a scenario, `comparison.baseline_vs_intervention` includes `headline`: a ready-made, non-causal
+sentence with both endpoints and the delta in percentage points. Quote it rather than rewording the numbers. `conclusion` is the matching closing sentence; quote it too.
 
 `stats`: `points`, `initial_adoption`, `final_adoption`, `shape` (`rises_to_end`, `peaks_before_end` or `flat`),
 `fastest_growth_day` and `fastest_growth` (largest one-step rise, absent if adoption never rises), `final_heuristic_band`,
@@ -55,7 +56,8 @@ to the last day, the maximum is just the endpoint, so there is no peak to report
 | `prior_run_ids` | up to 3 reviewed, completed runs | none |
 
 Returns `run_id`, `status: planned`, `workflow`, `request`, `steps[]`, `sensitivity_grid`, `execution_profile`,
-`warnings`, `blockers`, `provenance`, and `next`.
+`intervention_mapping` (scenario and sensitivity: how the intervention enters the engine, to state before approval;
+`null` for evidence), `warnings`, `blockers`, `provenance`, and `next`.
 
 ### `ndim_plan_sweep`
 

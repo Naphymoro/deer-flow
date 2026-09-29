@@ -25,11 +25,12 @@ short version. Shorten it, do not drop it.
 ## 4. Results
 - Encoding: trust, barrier, sentiment, themes, labelled "keyword heuristic"
 - Diagnosis: flags, labelled "heuristic, requires review"
-- Simulation: baseline and intervention endpoints and delta, or the sweep table (from `markdown_table`)
+- Simulation: `comparison.baseline_vs_intervention.headline` quoted as given, or the sweep table (from `markdown_table`)
 - Numerical checks: passed or not, with the sentence "numerical consistency only"
 - Comparability notes when several runs are compared
 
 ## 5. What this does and does not show
+- `comparison.baseline_vs_intervention.conclusion`, quoted as the only conclusion
 - Plain-language reading, using the wording rules in interpreting-results.md
 - Saturation or ceiling effects if present
 - Timing: `fastest_growth_day`. Mention a peak only if `shape` is `peaks_before_end`; never call the last day a peak
@@ -59,4 +60,7 @@ short version. Shorten it, do not drop it.
 - [ ] Consent status is what they told you
 - [ ] Comparability is stated for any multi-run comparison
 - [ ] No "peak" unless a simulation's `shape` is `peaks_before_end`
+- [ ] The scenario result is `comparison.baseline_vs_intervention.headline`, quoted; no causal verb, no delta as a percent
+- [ ] No recommendations or policy advice; only possible next analyses
+- [ ] The plan you showed stated `intervention_mapping` before the researcher approved
 - [ ] The report says the researcher's review is still pending

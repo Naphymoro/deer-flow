@@ -55,6 +55,9 @@ example 30 or 45) and compare timing, not just endpoints. Present it as a robust
 |---|---|
 | "Adoption will reach 91% in 90 days" | "In the illustrative model, endpoint adoption is 0.91 at day 90 under these assumptions." |
 | "The intervention increases adoption by 11 points" | "The model's intervention arm ends 0.11 above its baseline arm; this is not an estimated effect." |
+| "Trained CHWs may contribute to higher adoption", "the results suggest the intervention helps" | Quote `comparison.baseline_vs_intervention.headline`. No causal verb, even softened with "may" or "suggests". |
+| "A delta of 5.96%" | "+0.0596, or +5.96 percentage points, between the two model endpoints" |
+| A "Recommendations" section, or advice such as "reinforce messaging on costs" | "Possible next analyses": a sensitivity run, a shorter horizon, calibration against field data. Policy advice is the researcher's call. |
 | "Trust is 0.59 in this community" | "The keyword heuristic scored this narrative 0.59 on trust." |
 | "The sweep shows the result is robust" | "The endpoint moves from A to B across the grid; a grid shows sensitivity, not uncertainty." |
 | "Validated", "calibrated", "confirmed" | "Exploratory", "illustrative", "pending researcher review" |
