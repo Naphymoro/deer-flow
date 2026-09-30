@@ -15,23 +15,25 @@ single question about one narrative, the experiment workflow in `SKILL.md` is sh
 
 ## How to guide
 
-1. `ndim_journey_guide`, then describe the journey in a few sentences: the six phases, and that the researcher decides at
-   stages 3, 7 and 13. Ask for their question.
-2. `ndim_journey_start` with the question **verbatim**.
-3. **Intake (1-2).** Ask for their stories or field notes. For each: the text unchanged, the place (`admin_unit`), who or
+1. `ndim_journey_guide`, then describe the journey in a few sentences: the six phases, and all three decision points
+   (stages 3, 7 and 13). Ask for their question if they have not given one.
+2. **Confirm the question.** Show it back in quotes, exactly as you will pass it, and ask the researcher to confirm or
+   correct it. Do not add "in Rwanda" or any other context; the country has its own field.
+3. `ndim_journey_start` with the question **verbatim** and their reply as `question_confirmation` (audited).
+4. **Intake (1-2).** Ask for their stories or field notes. For each: the text unchanged, the place (`admin_unit`), who or
    what it came from (`source_name`), when (`period`), the language, and whether they have permission to use it
    (`consent`). Ask for what is missing; never guess a period or a place. One record per story. Call
    `ndim_journey_add_evidence`; the SDMX gate runs on each record.
-4. **Repository (3).** Show each record with its gate result and flags (personal data, instruction-like text, short
+5. **Repository (3).** Show each record with its gate result and flags (personal data, instruction-like text, short
    text, duplicates, consent). Ask the researcher to accept or reject each one. Call `ndim_journey_record_decisions` with
    their words. A `blocked` record (for example non-English) cannot be accepted: explain why.
-5. **Stages 4-13, one at a time.** Before each stage, say what it does in one sentence and ask whether to continue.
+6. **Stages 4-13, one at a time.** Before each stage, say what it does in one sentence and ask whether to continue.
    After it, explain the `result` in plain words with its `limits`. Follow the tool's `next`.
-6. **Digital twin (7).** Ask for their field observations: the adoption share they observed (0-1), any change in trust
+7. **Digital twin (7).** Ask for their field observations: the adoption share they observed (0-1), any change in trust
    and in barriers they saw (-1 to 1, 0 if none), and optionally an observed adoption series over time (3+ values). There
    are no defaults. If they have no observations, say the digital twin and the stages after it cannot run without them,
    and stop there or skip to what does not depend on it (regional analysis, knowledge graph).
-7. **Policy output (13).** Ask them to approve the export in their own words.
+8. **Policy output (13).** Ask them to approve the export in their own words.
 
 Stages must run in order; a 409 names the stages still missing. Re-running a stage clears the later stages that read
 it (`cleared_later_stages`): say so and run them again if the researcher wants. Evidence and decisions are frozen once

@@ -85,7 +85,7 @@ def test_existing_runs_are_met_with_the_tutorial_and_the_journey_keeps_its_decis
     skill = (SKILL / "SKILL.md").read_text()
     assert "Never present an\nexisting run as an answer" in skill and "`matching_tutorial`" in skill
     journey = (SKILL / "references" / "journey.md").read_text()
-    for phrase in ("There\n   are no defaults", "Ask the researcher to accept or reject each one", "approve the export in their own words"):
+    for phrase in ("There\n   are no defaults", "Ask the researcher to accept or reject each one", "approve the export in their own words", "ask the researcher to confirm or\n   correct it", "`question_confirmation`"):
         assert phrase in journey
 
 
