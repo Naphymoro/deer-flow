@@ -44,7 +44,6 @@ factors use a parameter sweep (`sweeps-and-parallel-work.md`).
 | Blocker | Cause | Right response |
 |---|---|---|
 | "English keywords ... supply an explicitly translated English source" | `language` is not `en` | Do not relabel the language as `en` to get past it. Follow "Translation" below. |
-| "agent-based proxy does not use intervention_strength" | `model=agent_based` with scenario or sensitivity | Use `compartmental` or `hybrid`. The engine will not substitute a model for you. |
 
 Blockers do not depend on the numeric parameters, so re-planning with different values will not clear them.
 

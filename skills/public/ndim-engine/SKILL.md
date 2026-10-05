@@ -83,7 +83,8 @@ When you plan a scenario, say plainly how the question maps onto the engine, bec
 - Pick a strength and say why (default 0.3 = moderate; use what the researcher suggests); pass your reason as
   `strength_reason`, and never say the researcher chose a value they did not give. The plan's `intervention_mapping`
   ends with a sentence on the strength to relay as is. Offer a `sensitivity` follow-up if the right strength is unclear.
-- Keep `model` `compartmental` (or `hybrid`); `agent_based` blocks scenarios.
+- `model` defaults to `compartmental`; `hybrid` and `agent_based` also read `intervention_strength`. Use another
+  model only if the researcher asks, and relay the plan's warning about it.
 
 After a scenario, lead the report with `comparison.baseline_vs_intervention.headline`, quoted as given, then the
 evidence signals that drive it, then the caveats from `references/interpreting-results.md`, and close with its `conclusion`, quoted. Never say the intervention
@@ -94,7 +95,7 @@ causes, contributes to or improves adoption, even with "may", and write no recom
 1. **Plan.** `ndim_plan_experiment(workspace_id, question, evidence, consent, skill, model, ...)`. Nothing runs yet.
 2. **Read the plan aloud to the researcher.** Quote the plan's `question` exactly so they can confirm it is
    theirs (pass their question verbatim; never rephrase it). Then steps, model family, parameters, `warnings`, and any `blockers`.
-   Blockers (non-English evidence, `agent_based` with an intervention) must be resolved with a *new* plan.
+   Blockers (such as non-English evidence) must be resolved with a *new* plan.
 3. **Get explicit approval.** Ask directly. Wait for the answer.
 4. **Run.** `ndim_start_experiment(..., approval_statement="<their words>", wait_seconds=30)`.
 5. **Wait if needed.** `ndim_wait_for_run` until `status` is `completed`, `failed`, `cancelled` or `interrupted`.
@@ -111,7 +112,7 @@ causes, contributes to or improves adoption, even with "may", and write no recom
 | `narrative_influence` | 0-1 | Raises adoption in `compartmental`/`hybrid`. Has **no effect** in `agent_based`. |
 | `initial_adoption` | 0-1 | Starting adoption share. |
 | `horizon_days` | 7-365 | Simulated days. Long horizons can saturate adoption and hide differences (see interpreting-results). |
-| `model` | `compartmental`, `agent_based`, `hybrid` | `agent_based` ignores intervention strength and narrative influence. `hybrid` is 55% compartmental + 45% proxy, its compartments describe only the compartmental part. |
+| `model` | `compartmental`, `agent_based`, `hybrid` | `agent_based`: households on an assumed network; reads intervention strength, ignores narrative influence. `hybrid` is 55% compartmental + 45% agent_based, its compartments describe only the compartmental part. |
 | `profile` | `auto`, `economy`, `balanced`, `thorough` | Sensitivity grid density: 3, 7, 11 points. Density gives resolution, not confidence. |
 | `language` | `en`, `rw`, `fr`, `other` | Anything but `en` blocks the plan. |
 | `prior_run_ids` | up to 3 | Only completed, researcher-reviewed runs. Context only; never alters parameters. |

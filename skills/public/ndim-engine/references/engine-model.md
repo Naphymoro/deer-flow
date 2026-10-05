@@ -51,22 +51,27 @@ statistical confidence interval.
 The engine normalizes after each step, so the `check` step's "compartment sum = 1" is a post-normalization check,
 not evidence that the raw ODE conserved mass.
 
-### agent_based (proxy)
+### agent_based (network)
 
-A simple peer/media contact recursion on adoption alone. It does **not** use `intervention_strength` and does **not**
-use `narrative_influence`. Consequently the harness blocks it for scenario and sensitivity workflows: a comparison
-would show no effect and mean nothing. Fine for `evidence`-only runs.
+Simulated households (1000 by default) on an assumed network, not a measured one. Each day a household that has not
+adopted may adopt through media, through neighbours who already adopted, or through `intervention_strength`; an
+adopter may stop because of barriers. `intervention_strength` enters as it does in the compartmental model: a daily
+chance of 0.020 x strength for households counted as not yet persuaded and 0.012 x strength for those counted as
+misinformed, mixed by the compartmental model's starting split (about 0.019 x strength at default scores). 0 adds
+nothing. It does **not** use `narrative_influence`. Runs use a fixed seed, so results repeat exactly; the band is the
+spread across 20 runs (chance only). Its plan carries a warning describing the lever.
 
 ### hybrid
 
-`adoption = 0.55 x compartmental + 0.45 x agent-based proxy`, same for the band. Reported S/M/T/I/R describe only the
-compartmental component. The plan carries a warning saying so. Because 45% of it ignores the intervention, expect
-muted intervention effects.
+`adoption = 0.55 x compartmental + 0.45 x agent_based network model`, same for the band. Reported S/M/T/I/R describe
+only the compartmental component. The plan carries a warning saying so. Both parts read `intervention_strength`;
+`narrative_influence` reaches only the compartmental 55%.
 
 ## Determinism and provenance
 
-- No random sampling. `random_seed` is null in the environment manifest with the reason recorded. Same inputs, same code,
-  same environment give byte-identical results.
+- The compartmental model has no random sampling; `agent_based` (and the network half of `hybrid`) samples from a fixed
+  seed. `random_seed` is null in the environment manifest with the reason recorded. Same inputs, same code, same
+  environment give byte-identical results.
 - Every run stores `source_sha256` (hash of the evidence text), `code_version` (SHA-256 of the scientific modules) and an
   environment manifest (Python, platform, numpy/scipy/torch/pyro versions).
 - A run cannot be resumed if `code_version` or the environment changed; you must plan again.
