@@ -108,6 +108,7 @@ trajectories), `limits` (what the numbers are not) and, when a re-run cleared la
 | `ndim_journey_add_evidence` | `workspace_id`, `journey_id`, `records[]` (1-50: `text`, `admin_unit`, `source_name`, `period`, `source_type`, `language`, `consent`) | Stages 1-2: stores each record unchanged and gate-checks it (`eligible`, `review_before_accepting`, `blocked`). Frozen once encoding runs |
 | `ndim_journey_record_decisions` | `workspace_id`, `journey_id`, `decisions[]` (`record_id`, `decision` accept\|reject, `reason?`), `approval_statement` | Stage 3: the researcher's decisions in their words. A blocked record cannot be accepted. Audited after the engine accepts |
 | `ndim_journey_run_stage` | `workspace_id`, `journey_id`, `stage`, stage settings below, `approval_statement` (digital, policy) | Stages 4-13, in order (409 names the missing stages). Audited after the engine accepts |
+| `ndim_journey_messenger_seeding` | `workspace_id`, `journey_id` | Optional, after stage 12, only on the researcher's request: compares recruiting messengers at random, best-connected or bridges on assumed network shapes; result comes back as stage 12's sentences and explanation (quote them). Up to half a minute |
 
 `ndim_journey_run_stage` settings: `horizon_days=180` (compartmental, agents, digital); `peer_effect=0.08`,
 `media_effect=0.05` (agents); `observed_adoption`, `trust_shift`, `barrier_shift` (digital, required, no defaults),

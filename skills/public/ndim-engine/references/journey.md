@@ -10,7 +10,7 @@ single question about one narrative, the experiment workflow in `SKILL.md` is sh
 | Encode | 4 Encoding | |
 | Model | 5 Compartmental model, 6 Agent-based model | |
 | Twin | 7 Digital twin, 8 Bayesian update, 9 RL optimizer | their field observations (stage 7) |
-| Strategy | 10 Regional analysis (optional), 11 Knowledge graph, 12 Inoculation lab | |
+| Strategy | 10 Regional analysis (optional), 11 Knowledge graph, 12 Inoculation lab, then optionally the messenger recruiting comparison (`ndim_journey_messenger_seeding`, only if the researcher wants it; up to half a minute) | |
 | Export | 13 Policy output | approve the export (stage 13) |
 
 ## How to guide
