@@ -22,11 +22,15 @@ single question about one narrative, the experiment workflow in `SKILL.md` is sh
 3. `ndim_journey_start` with the question **verbatim** and their reply as `question_confirmation` (audited).
 4. **Intake (1-2).** Ask for their stories or field notes. For each: the text unchanged, the place (`admin_unit`), who or
    what it came from (`source_name`), when (`period`), the language, and whether they have permission to use it
-   (`consent`). Ask for what is missing; never guess a period or a place. One record per story. Call
+   (`consent`). Ask for what is missing; never guess a period or a place. One record per story. The encoder reads
+   English keywords: for a record in another language, keep `text` in the original and ask the researcher for an
+   English translation they have checked (`translation_en`) and who checked it (`translation_checked_by`). Never
+   translate it yourself. Call
    `ndim_journey_add_evidence`; the SDMX gate runs on each record.
 5. **Repository (3).** Show each record with its gate result and flags (personal data, instruction-like text, short
    text, duplicates, consent). Ask the researcher to accept or reject each one. Call `ndim_journey_record_decisions` with
-   their words. A `blocked` record (for example non-English) cannot be accepted: explain why.
+   their words. A `blocked` record (for example non-English without a checked translation) cannot be accepted: explain
+   why.
 6. **Stages 4-13, one at a time.** Before each stage, say what it does in one sentence and ask whether to continue.
    After it, explain the `result` in plain words with its `limits`. Follow the tool's `next`.
 7. **Digital twin (7).** Ask for their field observations: the adoption share they observed (0-1), any change in trust

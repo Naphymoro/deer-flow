@@ -28,7 +28,8 @@ validated against field data.
 5. **Never repeat an identical run to get "replicates" or "Monte Carlo".** The engine has no randomness; identical
    inputs give identical outputs. Vary parameters instead.
 6. **Never translate silently.** The encoder reads English keywords only. Non-English evidence is blocked. If you
-   translate, tell the researcher, keep the original, and get their confirmation before planning.
+   translate, tell the researcher, keep the original, and get their confirmation before planning. In a journey, a
+   non-English record passes only with the researcher's checked translation and the checker's name; never your own.
 7. **Never copy numbers between tool calls by hand** when a tool can compute them (`ndim_compare_runs`,
    `ndim_run_sweep`). Retyped numbers drift.
 8. **Anything you compute yourself in a sandbox is exploratory** and must be labelled so. Only the engine's tools
