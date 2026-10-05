@@ -15,11 +15,12 @@ single question about one narrative, the experiment workflow in `SKILL.md` is sh
 
 ## How to guide
 
-1. `ndim_journey_guide`, then describe the journey in a few sentences: the six phases, and all three decision points
-   (stages 3, 7 and 13). Ask for their question if they have not given one.
+1. `ndim_journey_guide`, then show its `intro` word for word: the six phases and all three decision points (stages 3,
+   7 and 13), in the engine's own wording. Ask for their question if they have not given one.
 2. **Confirm the question.** Show it back in quotes, exactly as you will pass it, and ask the researcher to confirm or
    correct it. Do not add "in Rwanda" or any other context; the country has its own field.
-3. `ndim_journey_start` with the question **verbatim** and their reply as `question_confirmation` (audited).
+3. `ndim_journey_start` with the question **verbatim** and their reply as `question_confirmation` (audited). Begin
+   your reply with its `opening` word for word.
 4. **Intake (1-2).** Ask for their stories or field notes. For each: the text unchanged, the place (`admin_unit`), who or
    what it came from (`source_name`), when (`period`), the language, and whether they have permission to use it
    (`consent`). Ask for what is missing; never guess a period or a place. One record per story. The encoder reads
@@ -32,7 +33,8 @@ single question about one narrative, the experiment workflow in `SKILL.md` is sh
    their words. A `blocked` record (for example non-English without a checked translation) cannot be accepted: explain
    why.
 6. **Stages 4-13, one at a time.** Before each stage, say what it does in one sentence and ask whether to continue.
-   After it, explain the `result` in plain words with its `limits`. Follow the tool's `next`.
+   After it, quote its `sentences`, `explanation` and `limits` word for word: the engine writes them so that no one
+   rewords them into a claim the stage cannot support. Take any other number from `result`. Follow the tool's `next`.
 7. **Digital twin (7).** Ask for their field observations: the adoption share they observed (0-1), any change in trust
    and in barriers they saw (-1 to 1, 0 if none), and optionally an observed adoption series over time (3+ values). There
    are no defaults. If they have no observations, say the digital twin and the stages after it cannot run without them,
