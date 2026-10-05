@@ -46,7 +46,7 @@ example 30 or 45) and compare timing, not just endpoints. Present it as a robust
 |---|---|---|
 | `intervention_strength = 0` scenario | delta exactly 0.0 | Stop. Report a possible engine defect. |
 | Same plan run twice | identical results | Code or environment changed, or a bug. Compare `code_version`. |
-| Higher `intervention_strength` | delta rises (compartmental) | Check model family; `agent_based` ignores it |
+| Higher `intervention_strength` | delta does not fall (all three models) | Stop. Report a possible engine defect. |
 | `narrative_influence` under `agent_based` | no change | Expected: that model ignores it |
 
 ## Allowed and forbidden wording
